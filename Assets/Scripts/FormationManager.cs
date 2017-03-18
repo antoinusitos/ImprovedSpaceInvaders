@@ -16,6 +16,7 @@ public class FormationManager : MonoBehaviour
     private float _currentReload = 0.0f;
     public int totalWaves = 4;
     private int _currentWave = 0;
+    private bool direction = true;
 
     void Awake()
     {
@@ -30,7 +31,10 @@ public class FormationManager : MonoBehaviour
     void SpawnNewWave()
     {
         _currentWave++;
-        Instantiate(formationPrefab);
+        GameObject aFormation = Instantiate(formationPrefab);
+        if (!direction)
+            aFormation.GetComponent<FormationEnemy>().ChangeDirection();
+        direction = !direction;
     }
 
     public int GetTotalWaves()

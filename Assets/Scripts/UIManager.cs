@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private ScoreManager _scoreManager;
     private FormationManager _formationManager;
+    private int _life = 100;
 
     void Awake()
     {
@@ -28,6 +29,14 @@ public class UIManager : MonoBehaviour
     {
         _scoreManager = ScoreManager.GetInstance();
         _formationManager = FormationManager.GetInstance();
+
+        UpdateLife(0);
+    }
+
+    public void UpdateLife(int Amount)
+    {
+        _life += Amount;
+        livesText.text = "Life : " + _life + "%";
     }
 
     private void Update()
