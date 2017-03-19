@@ -9,6 +9,9 @@ public class FormationEnemy : MonoBehaviour
     // speed of the lerp between levels
     public float speedMovementLevel = 2.0f;
     public GameObject enemyPrefab;
+    public GameObject specialEnemyPrefab;
+
+    public float chanceToSpawnSpecial = 0.33f;
 
     private List<GameObject> _children;
 
@@ -33,11 +36,24 @@ public class FormationEnemy : MonoBehaviour
         _uiManager = UIManager.GetInstance();
 
         _children = new List<GameObject>();
-        for(int i = 0; i < _numberOfEnemy; i++)
+
+        bool mustSpawnSpecial = false;
+        float rand = Random.Range(0.0f, 1.0f);
+        if (rand <= chanceToSpawnSpecial)
+            mustSpawnSpecial = true;
+
+        for (int i = 0; i < _numberOfEnemy; i++)
         {
             float x = Mathf.Cos(Mathf.Deg2Rad * (360.0f / _numberOfEnemy) * i) * multiplierdistanceBase;
             float y = Mathf.Sin(Mathf.Deg2Rad * (360.0f / _numberOfEnemy) * i) * multiplierdistanceBase;
-            GameObject aEnemy = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity);
+            GameObject aEnemy;
+            if (mustSpawnSpecial)
+            {
+                aEnemy = Instantiate(specialEnemyPrefab, Vector3.zero, Quaternion.identity);
+                mustSpawnSpecial = false;
+            }
+            else
+                aEnemy = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity);
             aEnemy.GetComponent<EnemyMovement>().SetDirection(new Vector3(x, 0.55f, y), speedMovementLevel);
             aEnemy.transform.LookAt(new Vector3(0, aEnemy.transform.position.y, 0));
             aEnemy.transform.parent = transform;
@@ -76,7 +92,8 @@ public class FormationEnemy : MonoBehaviour
         if (CheckEmptyList())
         {
             SoundManager.GetInstance().playSound(SoundManager.soundToPlay.waveClear);
-            Destroy(this);
+            FormationManager.GetInstance().DestroyAWave(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -98,14 +115,18 @@ public class FormationEnemy : MonoBehaviour
 
     void DestroyAll()
     {
+        int nbToRemove = 0;
         for (int i = 0; i < _children.Count; i++)
         {
             if (_children[i])
             {
-                _uiManager.UpdateLife(-1);
+                nbToRemove += _children[i].GetComponent<EnemyLife>().lifeRemoved;
                 Destroy(_children[i].gameObject);
             }
         }
+        _uiManager.UpdateLife(-nbToRemove);
+        ScreenShakeManager.GetInstance().Shake(2.0f, -2.0f, 0.5f, 10.0f);
+        FormationManager.GetInstance().DestroyAWave(gameObject);
         Destroy(gameObject);
     }
 

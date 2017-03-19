@@ -52,4 +52,13 @@ public class InputManager: MonoBehaviour
     {
         return state.Triggers.Right >= triggerDeadZone ? true : false;
     }
+
+    public bool SuperPowerButtonPressed()
+    {
+        if(prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed)
+        {
+            return true;
+        }
+        return false;
+    }
 }

@@ -8,6 +8,8 @@ public class EnemyLife : MonoBehaviour
 
     public int life = 5;
 
+    public int lifeRemoved = 1;
+
     private ScreenShakeManager _screenShakeManager;
     private ScoreManager _scoreManager;
 

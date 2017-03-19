@@ -23,6 +23,11 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, _angle, 0), Time.deltaTime * movementSpeed);
     }
 
+    public float GetAngle()
+    {
+        return _angle;
+    }
+
     private void GetStickOrientation()
     {
         float x = _inputManager.GetStickPosX();

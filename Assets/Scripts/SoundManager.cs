@@ -18,6 +18,8 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip waveClear;
     public AudioClip explosion;
+    public AudioClip spawn;
+    public AudioClip superPower;
 
     private AudioSource _audioSource;
 
@@ -25,6 +27,8 @@ public class SoundManager : MonoBehaviour
     {
         waveClear,
         explosion,
+        spawn,
+        superPower,
 
     };
 
@@ -42,6 +46,12 @@ public class SoundManager : MonoBehaviour
                 break;
             case soundToPlay.explosion:
                 _audioSource.PlayOneShot(explosion);
+                break;
+            case soundToPlay.spawn:
+                _audioSource.PlayOneShot(spawn);
+                break;
+            case soundToPlay.superPower:
+                _audioSource.PlayOneShot(superPower);
                 break;
         }
     }
