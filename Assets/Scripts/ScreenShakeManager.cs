@@ -60,7 +60,7 @@ public class ScreenShakeManager : MonoBehaviour
         {
             if (!_usingTemp)
             {
-                _shakePos = new Vector3(Random.Range(screenOffsetMin, screenOffsetMax), _startPos.y, Random.Range(screenOffsetMin, screenOffsetMax));
+                _shakePos = new Vector3(_startPos.x + Random.Range(screenOffsetMin, screenOffsetMax), _startPos.y, _startPos.z + Random.Range(screenOffsetMin, screenOffsetMax));
                 transform.position = Vector3.Lerp(transform.position, _shakePos, shakeSpeed * Time.deltaTime);
 
                 _currentShakeTime += Time.deltaTime;
@@ -72,7 +72,7 @@ public class ScreenShakeManager : MonoBehaviour
             }
             else
             {
-                _shakePos = new Vector3(Random.Range(_tempOffsetMin, _tempOffsetMax), _startPos.y, Random.Range(_tempOffsetMin, _tempOffsetMax));
+                _shakePos = new Vector3(_startPos.x + Random.Range(_tempOffsetMin, _tempOffsetMax), _startPos.y, _startPos.z + Random.Range(_tempOffsetMin, _tempOffsetMax));
                 transform.position = Vector3.Lerp(transform.position, _shakePos, _tempShakeSpeed * Time.deltaTime);
 
                 _currentShakeTime += Time.deltaTime;

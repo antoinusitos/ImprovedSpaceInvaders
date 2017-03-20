@@ -14,17 +14,23 @@ public class FormationManager : MonoBehaviour
     public GameObject formationPrefab;
     public float timeBetweenWaves = 20.0f;
     private float _currentReload = 0.0f;
-    public int totalWaves = 4;
-    private int _currentWave = 0;
+    public int totalWaves = 3;
+    private int _currentWave = 1;
+    public int totalFormations = 4;
+    private int _currentFormation = 0;
     private List<GameObject> _allWaves;
+    private bool _canSpawn = false;
 
     private bool direction = true;
 
     public float timeBetweenGames = 5.0f;
     private float _currentTimeBetweenGames = 0.0f;
     private bool _waitingForNextGame = false;
+    private bool _iswaiting = false;
+
 
     private SoundManager _soundManager;
+    private UIManager _uiManager;
 
     void Awake()
     {
@@ -34,20 +40,24 @@ public class FormationManager : MonoBehaviour
     void Start()
     {
         _soundManager = SoundManager.GetInstance();
+        _uiManager = UIManager.GetInstance();
         _allWaves = new List<GameObject>();
+        _uiManager.ShowWaveText(true);
         StartCoroutine("SpawnTime");
     }
 
     IEnumerator SpawnTime()
     {
-        yield return new WaitForSeconds(_currentTimeBetweenGames);
+        yield return new WaitForSeconds(timeBetweenGames);
+        _uiManager.ShowWaveText(false);
+        _canSpawn = true;
         SpawnNewWave();
     }
 
     void SpawnNewWave()
     {
+        _currentFormation++;
         _soundManager.playSound(SoundManager.soundToPlay.spawn);
-        _currentWave++;
         GameObject aFormation = Instantiate(formationPrefab);
         if (!direction)
             aFormation.GetComponent<FormationEnemy>().ChangeDirection();
@@ -84,7 +94,7 @@ public class FormationManager : MonoBehaviour
 
     void Update()
     {
-        if (_currentWave < totalWaves)
+        if (_currentFormation < totalFormations && _canSpawn)
         {
             _currentReload += Time.deltaTime;
             if (_currentReload >= timeBetweenWaves)
@@ -95,12 +105,21 @@ public class FormationManager : MonoBehaviour
         }
         else if(_waitingForNextGame)
         {
+            if (!_iswaiting)
+            {
+                _currentFormation = 0;
+                _iswaiting = true;
+                _currentWave++;
+                _uiManager.ShowWaveText(true);
+            }
             _currentTimeBetweenGames += Time.deltaTime;
             if (_currentTimeBetweenGames >= timeBetweenGames)
             {
                 _waitingForNextGame = false;
                 _currentTimeBetweenGames = 0.0f;
                 _currentWave = 0;
+                _uiManager.ShowWaveText(false);
+                _iswaiting = false;
                 SpawnNewWave();
             }
         }

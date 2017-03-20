@@ -19,6 +19,10 @@ public class UIManager : MonoBehaviour
     public Slider powerSlider;
     public GameObject powerImage;
 
+    public GameObject playerLife1;
+    public GameObject playerLife2;
+    public GameObject playerLife3;
+
     private ScoreManager _scoreManager;
     private FormationManager _formationManager;
     private int _life = 100;
@@ -59,6 +63,39 @@ public class UIManager : MonoBehaviour
         _oldLife = _life;
         _life += Amount;
         _changeSliderPos = true;
+    }
+
+    public void UpdatePlayerLife(int newAmount)
+    {
+        if(newAmount == 3)
+        {
+            playerLife1.SetActive(true);
+            playerLife2.SetActive(true);
+            playerLife3.SetActive(true);
+        }
+        else if (newAmount == 2)
+        {
+            playerLife1.SetActive(true);
+            playerLife2.SetActive(true);
+            playerLife3.SetActive(false);
+        }
+        else if (newAmount == 1)
+        {
+            playerLife1.SetActive(true);
+            playerLife2.SetActive(false);
+            playerLife3.SetActive(false);
+        }
+        else if (newAmount == 0)
+        {
+            playerLife1.SetActive(false);
+            playerLife2.SetActive(false);
+            playerLife3.SetActive(false);
+        }
+    }
+
+    public void ShowWaveText(bool newState)
+    {
+        waveText.gameObject.SetActive(newState);
     }
 
     private void Update()
