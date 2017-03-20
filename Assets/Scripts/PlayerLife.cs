@@ -7,10 +7,12 @@ public class PlayerLife : MonoBehaviour
     public int life = 3;
 
     private UIManager _uiManager;
+    private GameManager _gameManager;
 
     void Start()
     {
         _uiManager = UIManager.GetInstance();
+        _gameManager = GameManager.GetInstance();
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -23,7 +25,7 @@ public class PlayerLife : MonoBehaviour
             _uiManager.UpdatePlayerLife(life);
             if (life <= 0)
             {
-                
+                _gameManager.Lose();
             }
         }
     }

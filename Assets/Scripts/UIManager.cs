@@ -23,6 +23,10 @@ public class UIManager : MonoBehaviour
     public GameObject playerLife2;
     public GameObject playerLife3;
 
+    public GameObject winText;
+    public GameObject loseText;
+    public GameObject StartText;
+
     private ScoreManager _scoreManager;
     private FormationManager _formationManager;
     private int _life = 100;
@@ -96,6 +100,21 @@ public class UIManager : MonoBehaviour
     public void ShowWaveText(bool newState)
     {
         waveText.gameObject.SetActive(newState);
+    }
+
+    public void ShowStartText(bool newState)
+    {
+        StartText.gameObject.SetActive(newState);
+    }
+
+    public void ShowWinText(bool newState)
+    {
+        winText.gameObject.SetActive(newState);
+    }
+
+    public void ShowLoseText(bool newState)
+    {
+        loseText.gameObject.SetActive(newState);
     }
 
     private void Update()

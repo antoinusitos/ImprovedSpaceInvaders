@@ -42,7 +42,10 @@ public class FormationManager : MonoBehaviour
         _soundManager = SoundManager.GetInstance();
         _uiManager = UIManager.GetInstance();
         _allWaves = new List<GameObject>();
-        _uiManager.ShowWaveText(true);
+    }
+
+    public void StartGame()
+    {
         StartCoroutine("SpawnTime");
     }
 

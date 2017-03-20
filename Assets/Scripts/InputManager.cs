@@ -61,4 +61,13 @@ public class InputManager: MonoBehaviour
         }
         return false;
     }
+
+    public bool AButtonPressed()
+    {
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        {
+            return true;
+        }
+        return false;
+    }
 }
