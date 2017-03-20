@@ -53,6 +53,10 @@ public class FormationManager : MonoBehaviour
             aFormation.GetComponent<FormationEnemy>().ChangeDirection();
         direction = !direction;
         _allWaves.Add(aFormation);
+        if (_allWaves.Count == 1)
+        {
+            aFormation.GetComponent<FormationEnemy>().SetAllowToShoot(true);
+        }
     }
 
     public int GetTotalWaves()
@@ -71,6 +75,10 @@ public class FormationManager : MonoBehaviour
         if (_allWaves.Count == 0)
         {
             _waitingForNextGame = true;
+        }
+        else
+        {
+            _allWaves[0].GetComponent<FormationEnemy>().AllowTheWavetoShoot();
         }
     }
 

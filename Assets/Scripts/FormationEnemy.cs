@@ -29,13 +29,18 @@ public class FormationEnemy : MonoBehaviour
 
     private bool _isMoving = true;
 
+    private bool _allowToShoot = false;
+
     private UIManager _uiManager;
+
+    void Awake()
+    {
+        _children = new List<GameObject>();
+    }
 
     void Start ()
     {
         _uiManager = UIManager.GetInstance();
-
-        _children = new List<GameObject>();
 
         bool mustSpawnSpecial = false;
         float rand = Random.Range(0.0f, 1.0f);
@@ -59,6 +64,12 @@ public class FormationEnemy : MonoBehaviour
             aEnemy.transform.parent = transform;
             _children.Add(aEnemy);
         }
+
+        if(_allowToShoot)
+        {
+            AllowTheWavetoShoot();
+        }
+
         StartCoroutine(StartRotation());
     }
 
@@ -153,5 +164,21 @@ public class FormationEnemy : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void SetAllowToShoot(bool newState)
+    {
+        _allowToShoot = newState;
+    }
+
+    public void AllowTheWavetoShoot()
+    {
+        for (int i = 0; i < _children.Count; i++)
+        {
+            if (_children[i] && _children[i].GetComponent<EnemyShoot>())
+            {
+                _children[i].GetComponent<EnemyShoot>().SetCanShoot(true);
+            }
+        }
     }
 }

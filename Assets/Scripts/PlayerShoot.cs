@@ -10,7 +10,7 @@ public class PlayerShoot : MonoBehaviour
 
     private bool _superPowerActive = false;
     private bool _regenSuperPower = true;
-    private float _timeToRegenSuperPower = 1.0f;
+    private float _timeToRegenSuperPower = 30.0f;
     private float _currentTimeToRegenSuperPower = 0.0f;
 
     public GameObject bulletPrefab;
