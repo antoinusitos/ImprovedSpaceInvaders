@@ -18,14 +18,22 @@ public class UIManager : MonoBehaviour
     public Slider lifeSlider;
     public Slider powerSlider;
     public GameObject powerImage;
+    public Slider powerSliderP2;
+    public GameObject powerImageP2;
 
     public GameObject playerLife1;
     public GameObject playerLife2;
     public GameObject playerLife3;
 
+    public GameObject player2Life1;
+    public GameObject player2Life2;
+    public GameObject player2Life3;
+
     public GameObject winText;
     public GameObject loseText;
     public GameObject StartText;
+
+    public GameObject player2JoinText;
 
     private ScoreManager _scoreManager;
     private FormationManager _formationManager;
@@ -34,7 +42,7 @@ public class UIManager : MonoBehaviour
     private int _oldLife = 100;
     private bool _changeSliderPos = false;
     private float _currentWait = 0.0f;
-    public float changeLifespeed = 0.05f;
+    public float changeLifeSpeed = 0.05f;
 
     void Awake()
     {
@@ -49,6 +57,16 @@ public class UIManager : MonoBehaviour
         UpdateLife(0);
     }
 
+    public void Reset()
+    {
+        _life = 100;
+    }
+
+    public void HidePlayer2JoinText()
+    {
+        player2JoinText.SetActive(false);
+    }
+
     public void UpdatePowerSlider(float rate)
     {
         powerSlider.value = rate;
@@ -59,6 +77,19 @@ public class UIManager : MonoBehaviour
         else if (rate == 0)
         {
             powerImage.SetActive(false);
+        }
+    }
+
+    public void UpdatePowerSliderP2(float rate)
+    {
+        powerSliderP2.value = rate;
+        if (rate == 1)
+        {
+            powerImageP2.SetActive(true);
+        }
+        else if (rate == 0)
+        {
+            powerImageP2.SetActive(false);
         }
     }
 
@@ -97,6 +128,34 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdatePlayer2Life(int newAmount)
+    {
+        if (newAmount == 3)
+        {
+            player2Life1.SetActive(true);
+            player2Life2.SetActive(true);
+            player2Life3.SetActive(true);
+        }
+        else if (newAmount == 2)
+        {
+            player2Life1.SetActive(true);
+            player2Life2.SetActive(true);
+            player2Life3.SetActive(false);
+        }
+        else if (newAmount == 1)
+        {
+            player2Life1.SetActive(true);
+            player2Life2.SetActive(false);
+            player2Life3.SetActive(false);
+        }
+        else if (newAmount == 0)
+        {
+            player2Life1.SetActive(false);
+            player2Life2.SetActive(false);
+            player2Life3.SetActive(false);
+        }
+    }
+
     public void ShowWaveText(bool newState)
     {
         waveText.gameObject.SetActive(newState);
@@ -125,7 +184,7 @@ public class UIManager : MonoBehaviour
         if(_changeSliderPos)
         {
             _currentWait += Time.deltaTime;
-            if (_currentWait >= changeLifespeed)
+            if (_currentWait >= changeLifeSpeed)
             {
                 _currentWait = 0.0f;
                 if (_oldLife < _life)

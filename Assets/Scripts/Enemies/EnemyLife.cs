@@ -20,7 +20,7 @@ public class EnemyLife : MonoBehaviour
         _scoreManager = ScoreManager.GetInstance();
     }
 
-    private void TakeDamage(int Amount)
+    private void TakeDamage(int Amount, PlayerBullet thePlayerBullet)
     {
         life -= Amount;
 
@@ -29,6 +29,9 @@ public class EnemyLife : MonoBehaviour
             SoundManager.GetInstance().playSound(SoundManager.soundToPlay.explosion);
             _screenShakeManager.Shake();
             _scoreManager.AddScore(scoreEarn);
+            if(thePlayerBullet.GetOwner())
+                thePlayerBullet.GetOwner().gameObject.GetComponent<PlayerShoot>().AddReloadSpecialBullet();
+            GetComponent<EnemyShoot>().Shoot();
             Destroy(gameObject);
         }
     }
@@ -38,7 +41,7 @@ public class EnemyLife : MonoBehaviour
         PlayerBullet playerBullet = collider.transform.GetComponent<PlayerBullet>();
         if (playerBullet)
         {
-            TakeDamage(playerBullet.GetDamage());
+            TakeDamage(playerBullet.GetDamage(), playerBullet);
             Destroy(collider.gameObject);
         }
     }

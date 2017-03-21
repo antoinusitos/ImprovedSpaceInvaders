@@ -9,6 +9,10 @@ public class PlayerMovement : MonoBehaviour
 
     private float _angle = 0.0f;
 
+    private bool _canMove = false;
+
+    public int indexPlayer = 0;
+
     //accessor
     private InputManager _inputManager;
 
@@ -19,8 +23,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        GetStickOrientation();
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, _angle, 0), Time.deltaTime * movementSpeed);
+        if (_canMove)
+        {
+            GetStickOrientation();
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, _angle, 0), Time.deltaTime * movementSpeed);
+        }
+    }
+
+    public void SetCanMove(bool newState)
+    {
+        _canMove = newState;
     }
 
     public float GetAngle()
@@ -30,8 +42,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetStickOrientation()
     {
-        float x = _inputManager.GetStickPosX();
-        float z = _inputManager.GetStickPosY();
+        float x = 0; _inputManager.GetStickPosX();
+        float z = 0; _inputManager.GetStickPosY();
+
+        if(indexPlayer == 0)
+        {
+            x = _inputManager.GetStickPosX();
+            z = _inputManager.GetStickPosY();
+        }
+        else
+        {
+            x = _inputManager.GetStickPosXP2();
+            z = _inputManager.GetStickPosYP2();
+        }
 
         Vector3 v = Vector3.zero;
 

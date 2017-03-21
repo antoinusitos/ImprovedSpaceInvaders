@@ -9,6 +9,8 @@ public class PlayerLife : MonoBehaviour
     private UIManager _uiManager;
     private GameManager _gameManager;
 
+    public int indexPlayer = 0;
+
     void Start()
     {
         _uiManager = UIManager.GetInstance();
@@ -22,11 +24,32 @@ public class PlayerLife : MonoBehaviour
         {
             Destroy(collider.gameObject);
             life--;
-            _uiManager.UpdatePlayerLife(life);
+            if(indexPlayer == 0)
+                _uiManager.UpdatePlayerLife(life);
+            else
+                _uiManager.UpdatePlayer2Life(life);
             if (life <= 0)
             {
                 _gameManager.Lose();
             }
         }
+    }
+
+    public void Reset()
+    {
+        life = 3;
+        if (indexPlayer == 0)
+            _uiManager.UpdatePlayerLife(life);
+        else
+            _uiManager.UpdatePlayer2Life(life);
+    }
+
+    public void RefillLife()
+    {
+        life++;
+        if (indexPlayer == 0)
+            _uiManager.UpdatePlayerLife(life);
+        else
+            _uiManager.UpdatePlayer2Life(life);
     }
 }

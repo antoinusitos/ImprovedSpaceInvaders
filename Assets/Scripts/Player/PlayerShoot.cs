@@ -9,9 +9,6 @@ public class PlayerShoot : MonoBehaviour
     private bool _canShoot = true;
 
     private bool _superPowerActive = false;
-    private bool _regenSuperPower = true;
-    private float _timeToRegenSuperPower = 30.0f;
-    private float _currentTimeToRegenSuperPower = 0.0f;
 
     public GameObject bulletPrefab;
     public GameObject specialBulletPrefab;
@@ -21,12 +18,18 @@ public class PlayerShoot : MonoBehaviour
 
     private int _nbSuperBullet = 6;
     private int _currentNbSuperBullet = 0;
+    private int _currentNbBeforeSpecialBullet = 0;
+    public int nbBeforeSpecialBullet = 10;
     private float _reloadSpecialBullet = 0.0f;
     private float _SpecialBulletFireRate = 0.1f;
     private bool _spawnOne = true;
     private bool _shootingSuperBullet = false;
 
     public PlayerMovement playerMovement;
+
+    private bool _mustStop = false;
+
+    public int indexPlayer = 0;
 
     //accessor
     private InputManager _inputManager;
@@ -40,8 +43,38 @@ public class PlayerShoot : MonoBehaviour
         _uiManager = UIManager.GetInstance();
     }
 
+    public void AddReloadSpecialBullet()
+    {
+        _currentNbBeforeSpecialBullet++;
+        if (indexPlayer == 0)
+            _uiManager.UpdatePowerSlider((float)_currentNbBeforeSpecialBullet / (float)nbBeforeSpecialBullet);
+        else
+            _uiManager.UpdatePowerSliderP2((float)_currentNbBeforeSpecialBullet / (float)nbBeforeSpecialBullet);
+        if (_currentNbBeforeSpecialBullet >= nbBeforeSpecialBullet && !_superPowerActive)
+        {
+            if (indexPlayer == 0)
+                _uiManager.UpdatePowerSlider(1);
+            else
+                _uiManager.UpdatePowerSliderP2(1);
+            _soundManager.playSound(SoundManager.soundToPlay.superPower);
+            _superPowerActive = true;
+        }
+    }
+
+    public void Reset()
+    {
+        _superPowerActive = false;
+        _currentNbBeforeSpecialBullet = 0;
+        if (indexPlayer == 0)
+            _uiManager.UpdatePowerSlider((float)_currentNbBeforeSpecialBullet / (float)nbBeforeSpecialBullet);
+        else
+            _uiManager.UpdatePowerSliderP2((float)_currentNbBeforeSpecialBullet / (float)nbBeforeSpecialBullet);
+    }
+
     private void Update()
     {
+        if (_mustStop) return;
+
         if(!_canShoot)
         {
             _currentReload += Time.deltaTime;
@@ -52,7 +85,7 @@ public class PlayerShoot : MonoBehaviour
             }
         }
 
-        if(_canShoot && _inputManager.RightTriggerPressed())
+        if(_canShoot && ((indexPlayer == 0 && _inputManager.RightTriggerPressed()) || (indexPlayer == 1 && _inputManager.RightTriggerPressedP2())))
         {
             _canShoot = false;
             if (bulletPrefab)
@@ -60,30 +93,16 @@ public class PlayerShoot : MonoBehaviour
                 GameObject aBullet = Instantiate(bulletPrefab, bulletSpawn.transform.position, Quaternion.identity);
                 Vector2 dir = new Vector2(-transform.position.x, -transform.position.z);
                 aBullet.GetComponent<Bullet>().SetDirection(dir);
+                aBullet.GetComponent<PlayerBullet>().SetOwner(gameObject);
             }
             else
                 Debug.LogError("No bulletPrefab on " + name);
         }
-    
-        if(_regenSuperPower)
-        {
-            _currentTimeToRegenSuperPower += Time.deltaTime;
-            _uiManager.UpdatePowerSlider(_currentTimeToRegenSuperPower / _timeToRegenSuperPower);
-            if (_currentTimeToRegenSuperPower >= _timeToRegenSuperPower)
-            {
-                _uiManager.UpdatePowerSlider(1);
-                _soundManager.playSound(SoundManager.soundToPlay.superPower);
-                _currentTimeToRegenSuperPower = 0.0f;
-                _regenSuperPower = false;
-                _superPowerActive = true;
-            }
-        }
 
-        if(_superPowerActive && _inputManager.SuperPowerButtonPressed())
+        if(_superPowerActive && ((indexPlayer == 0 && _inputManager.SuperPowerButtonPressed()) || (indexPlayer == 1 && _inputManager.SuperPowerButtonPressedP2())))
         {
             UseSuperPower();
             _superPowerActive = false;
-            _regenSuperPower = true;
         }
 
         if(_shootingSuperBullet)
@@ -121,10 +140,19 @@ public class PlayerShoot : MonoBehaviour
 
     void UseSuperPower()
     {
-        _uiManager.UpdatePowerSlider(0);
+        _currentNbBeforeSpecialBullet = 0;
+        if(indexPlayer == 0)
+            _uiManager.UpdatePowerSlider(0);
+        else
+            _uiManager.UpdatePowerSliderP2(0);
         _shootingSuperBullet = true;
         GameObject aBullet = Instantiate(specialBulletPrefab, superBulletSpawn.transform.position, Quaternion.identity);
         Vector2 dir = new Vector2(-transform.position.x, -transform.position.z);
         aBullet.GetComponent<Bullet>().SetDirection(dir);
+    }
+
+    public void SetMustStop(bool newState)
+    {
+        _mustStop = newState;
     }
 }

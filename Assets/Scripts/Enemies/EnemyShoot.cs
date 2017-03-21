@@ -33,7 +33,7 @@ public class EnemyShoot : MonoBehaviour
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
         Vector2 dir = new Vector2(transform.position.x, transform.position.z);

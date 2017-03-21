@@ -16,9 +16,12 @@ public class InputManager: MonoBehaviour
 
     private bool playerIndexSet = false;
     private PlayerIndex playerIndex;
+    private PlayerIndex player2Index;
     private GamePadState state;
+    private GamePadState statep2;
     private GamePadState prevState;
-    
+    private GamePadState prevStatep2;
+
     void Awake ()
     {
         _instance = this;
@@ -35,7 +38,18 @@ public class InputManager: MonoBehaviour
         }
 
         prevState = state;
-        state = GamePad.GetState(0);
+        state = GamePad.GetState(testPlayerIndex);
+
+        PlayerIndex testPlayer2Index = (PlayerIndex)1;
+        GamePadState testState2 = GamePad.GetState(testPlayer2Index);
+        if (testState2.IsConnected)
+        {
+            player2Index = testPlayer2Index;
+            playerIndexSet = true;
+        }
+
+        prevStatep2 = state;
+        statep2 = GamePad.GetState(testPlayer2Index);
     }
 
     public float GetStickPosX()
@@ -48,9 +62,24 @@ public class InputManager: MonoBehaviour
         return state.ThumbSticks.Left.Y;
     }
 
+    public float GetStickPosXP2()
+    {
+        return statep2.ThumbSticks.Left.X;
+    }
+
+    public float GetStickPosYP2()
+    {
+        return statep2.ThumbSticks.Left.Y;
+    }
+
     public bool RightTriggerPressed()
     {
         return state.Triggers.Right >= triggerDeadZone ? true : false;
+    }
+
+    public bool RightTriggerPressedP2()
+    {
+        return statep2.Triggers.Right >= triggerDeadZone ? true : false;
     }
 
     public bool SuperPowerButtonPressed()
@@ -65,6 +94,24 @@ public class InputManager: MonoBehaviour
     public bool AButtonPressed()
     {
         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool SuperPowerButtonPressedP2()
+    {
+        if (prevStatep2.Buttons.B == ButtonState.Released && statep2.Buttons.B == ButtonState.Pressed)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool AButtonPressedP2()
+    {
+        if (prevStatep2.Buttons.A == ButtonState.Released && statep2.Buttons.A == ButtonState.Pressed)
         {
             return true;
         }

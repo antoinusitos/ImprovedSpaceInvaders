@@ -31,6 +31,11 @@ public class FormationEnemy : MonoBehaviour
 
     private bool _allowToShoot = false;
 
+    private bool _mustStop = false;
+
+    private int _formationSpeedLevel = 1;
+    public float bonusPerSpeedLevel = 1.25f;
+
     private UIManager _uiManager;
 
     void Awake()
@@ -67,10 +72,19 @@ public class FormationEnemy : MonoBehaviour
 
         if(_allowToShoot)
         {
-            AllowTheWavetoShoot();
+            AllowTheFormationtoShoot();
         }
 
         StartCoroutine(StartRotation());
+    }
+
+    public void ChangeLevel(int NewLevel)
+    {
+        if (NewLevel > 1)
+        {
+            _formationSpeedLevel = NewLevel;
+            rotationSpeed *= bonusPerSpeedLevel;
+        }
     }
 
     public void ChangeDirection()
@@ -100,10 +114,10 @@ public class FormationEnemy : MonoBehaviour
                }
             }
         }
-        if (CheckEmptyList())
+        if (!_mustStop && CheckEmptyList())
         {
             SoundManager.GetInstance().playSound(SoundManager.soundToPlay.waveClear);
-            FormationManager.GetInstance().DestroyAWave(gameObject);
+            FormationManager.GetInstance().DestroyAFormation(gameObject);
             Destroy(gameObject);
         }
     }
@@ -137,19 +151,35 @@ public class FormationEnemy : MonoBehaviour
         }
         _uiManager.UpdateLife(-nbToRemove);
         ScreenShakeManager.GetInstance().Shake(2.0f, -2.0f, 0.5f, 10.0f);
-        FormationManager.GetInstance().DestroyAWave(gameObject);
+        FormationManager.GetInstance().DestroyAFormation(gameObject);
+        Destroy(gameObject);
+    }
+
+    public void RemoveAllEnemies()
+    {
+        for (int i = 0; i < _children.Count; i++)
+        {
+            if (_children[i])
+            {
+                Destroy(_children[i].gameObject);
+            }
+        }
+        FormationManager.GetInstance().DestroyAFormation(gameObject);
         Destroy(gameObject);
     }
 
     IEnumerator StartRotation()
     {
         yield return new WaitForSeconds(speedMovementLevel);
-        _isMoving = true;
-        for (int i = 0; i < _children.Count; i++)
+        if (!_mustStop)
         {
-            if (_children[i])
+            _isMoving = true;
+            for (int i = 0; i < _children.Count; i++)
             {
-                _children[i].GetComponent<EnemyMovement>().SetMoving(false);
+                if (_children[i])
+                {
+                    _children[i].GetComponent<EnemyMovement>().SetMoving(false);
+                }
             }
         }
     }
@@ -166,12 +196,26 @@ public class FormationEnemy : MonoBehaviour
         return true;
     }
 
+    public void StopFormation()
+    {
+        _mustStop = true;
+        _isMoving = false;
+        _allowToShoot = false;
+        for (int i = 0; i < _children.Count; i++)
+        {
+            if (_children[i] && _children[i].GetComponent<EnemyShoot>())
+            {
+                _children[i].GetComponent<EnemyShoot>().SetCanShoot(false);
+            }
+        }
+    }
+
     public void SetAllowToShoot(bool newState)
     {
         _allowToShoot = newState;
     }
 
-    public void AllowTheWavetoShoot()
+    public void AllowTheFormationtoShoot()
     {
         for (int i = 0; i < _children.Count; i++)
         {

@@ -28,4 +28,18 @@ public class ScoreManager : MonoBehaviour
         return _score;
     }
 
+    public void Reset()
+    {
+        _score = 0;
+    }
+
+    public void SaveMaxScore()
+    {
+        int maxScore = 0;
+        maxScore = PlayerPrefs.GetInt("MaxScore");
+        if(_score > maxScore)
+        {
+            PlayerPrefs.SetInt("MaxScore", _score);
+        }
+    }
 }
