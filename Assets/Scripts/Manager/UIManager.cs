@@ -39,6 +39,8 @@ public class UIManager : MonoBehaviour
     private FormationManager _formationManager;
     private int _life = 100;
 
+    public GameObject player2UI;
+
     private int _oldLife = 100;
     private bool _changeSliderPos = false;
     private float _currentWait = 0.0f;
@@ -60,6 +62,11 @@ public class UIManager : MonoBehaviour
     public void Reset()
     {
         _life = 100;
+    }
+
+    public void ActivatePlayer2UI()
+    {
+        player2UI.SetActive(true);
     }
 
     public void HidePlayer2JoinText()

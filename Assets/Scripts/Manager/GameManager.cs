@@ -146,6 +146,8 @@ public class GameManager : MonoBehaviour
         {
             nbPlayers = 2;
             _uiManager.HidePlayer2JoinText();
+            playerMovementP2.gameObject.SetActive(true);
+            _uiManager.ActivatePlayer2UI();
         }
     }
 }
