@@ -74,9 +74,13 @@ public class GameManager : MonoBehaviour
     void BlockPlayer()
     {
         playerMovement.SetCanMove(false);
-        playerMovementP2.SetCanMove(false);
         playerShoot.SetMustStop(true);
-        playerShootP2.SetMustStop(true);
+
+        if (nbPlayers == 2)
+        {
+            playerMovementP2.SetCanMove(false);
+            playerShootP2.SetMustStop(true);
+        }
     }
 
     public void Win()
@@ -103,10 +107,14 @@ public class GameManager : MonoBehaviour
     private void Reset()
     {
         _formationManager.RemoveAllFormations();
+        _formationManager.Reset();
         playerShoot.Reset();
-        playerShootP2.Reset();
         playerLife.Reset();
-        playerLifeP2.Reset();
+        if (nbPlayers == 2)
+        {
+            playerShootP2.Reset();
+            playerLifeP2.Reset();
+        }
         _scoreManager.Reset();
         if(_protectionsInstance)
             Destroy(_protectionsInstance);
@@ -123,10 +131,12 @@ public class GameManager : MonoBehaviour
         _uiManager.ShowWaveText(true);
         _formationManager.StartGame();
         playerMovement.SetCanMove(true);
-        playerMovementP2.SetCanMove(true);
         playerShoot.SetMustStop(false);
-        playerShootP2.SetMustStop(false);
-
+        if (nbPlayers == 2)
+        {
+            playerMovementP2.SetCanMove(true);
+            playerShootP2.SetMustStop(false);
+        }
     }
 
     IEnumerator Restart()
@@ -142,7 +152,12 @@ public class GameManager : MonoBehaviour
             StartGame();
         }
 
-        if(nbPlayers == 1 && _inputManager.AButtonPressedP2())
+        if (_inputManager.SuperPowerButtonPressed() && _isWaiting)
+        {
+            Application.LoadLevel(0);
+        }
+
+        if (nbPlayers == 1 && _inputManager.AButtonPressedP2())
         {
             nbPlayers = 2;
             _uiManager.HidePlayer2JoinText();

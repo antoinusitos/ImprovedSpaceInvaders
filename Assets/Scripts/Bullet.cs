@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     public float speed = 5.0f;
     public int damage = 1;
 
-    private Vector2 _direction;
+    public Vector2 _direction;
 
     public void SetDamage(int newDamage)
     {

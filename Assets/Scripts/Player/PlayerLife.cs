@@ -6,8 +6,9 @@ public class PlayerLife : MonoBehaviour
 {
     public int life = 3;
 
-    private UIManager _uiManager;
+    public UIManager _uiManager;
     private GameManager _gameManager;
+    private InputManager _inputManager;
 
     public int indexPlayer = 0;
 
@@ -15,6 +16,7 @@ public class PlayerLife : MonoBehaviour
     {
         _uiManager = UIManager.GetInstance();
         _gameManager = GameManager.GetInstance();
+        _inputManager = InputManager.GetInstance();
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -24,7 +26,8 @@ public class PlayerLife : MonoBehaviour
         {
             Destroy(collider.gameObject);
             life--;
-            if(indexPlayer == 0)
+            _inputManager.Vibration(indexPlayer);
+            if (indexPlayer == 0)
                 _uiManager.UpdatePlayerLife(life);
             else
                 _uiManager.UpdatePlayer2Life(life);
@@ -47,9 +50,12 @@ public class PlayerLife : MonoBehaviour
     public void RefillLife()
     {
         life++;
-        if (indexPlayer == 0)
-            _uiManager.UpdatePlayerLife(life);
-        else
-            _uiManager.UpdatePlayer2Life(life);
+        if (_uiManager)
+        {
+            if (indexPlayer == 0)
+                _uiManager.UpdatePlayerLife(life);
+            else
+                _uiManager.UpdatePlayer2Life(life);
+        }
     }
 }

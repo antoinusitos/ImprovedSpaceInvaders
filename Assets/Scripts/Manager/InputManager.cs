@@ -52,6 +52,11 @@ public class InputManager: MonoBehaviour
         statep2 = GamePad.GetState(testPlayer2Index);
     }
 
+    public void Vibration(int index)
+    {
+        GamePad.SetVibration((PlayerIndex)index, 1.0f, 1.0f);
+    }
+
     public float GetStickPosX()
     {
         return state.ThumbSticks.Left.X;

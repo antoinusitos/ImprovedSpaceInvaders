@@ -12,6 +12,7 @@ public class FormationManager : MonoBehaviour
     }
 
     public GameObject formationPrefab;
+    public GameObject bossPrefab;
     public float timeBetweenFormation = 10.0f;
     private float _currentReload = 0.0f;
 
@@ -51,6 +52,18 @@ public class FormationManager : MonoBehaviour
     public void StartGame()
     {
         StartCoroutine("SpawnTime");
+    }
+
+    public void Reset()
+    {
+        _currentWave = 1;
+        _currentFormation = 0;
+        _currentTimeBetweenWaves = 0.0f;
+        _currentReload = 0.0f;
+        direction = true;
+        _iswaiting = false;
+        _waitingForNextWave = false;
+        _canSpawn = false;
     }
 
     IEnumerator SpawnTime()
@@ -100,6 +113,7 @@ public class FormationManager : MonoBehaviour
     void SpawnBoss()
     {
         Debug.Log("spawn Boss");
+        Instantiate(bossPrefab);
     }
 
     public int GetTotalWaves()
@@ -127,6 +141,11 @@ public class FormationManager : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            SpawnBoss();
+        }
+
         if (_currentFormation < totalFormations && _canSpawn)
         {
             _currentReload += Time.deltaTime;
@@ -144,7 +163,8 @@ public class FormationManager : MonoBehaviour
                 _currentWave++;
                 _uiManager.ShowWaveText(true);
                 player.GetComponent<PlayerLife>().RefillLife();
-                player2.GetComponent<PlayerLife>().RefillLife();
+                if(player2 && player2.GetComponent<PlayerLife>())
+                    player2.GetComponent<PlayerLife>().RefillLife();
             }
             _currentTimeBetweenWaves += Time.deltaTime;
             if (_currentTimeBetweenWaves >= timeBetweenWaves)

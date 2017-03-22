@@ -12,12 +12,15 @@ public class EnemyLife : MonoBehaviour
 
     private ScreenShakeManager _screenShakeManager;
     private ScoreManager _scoreManager;
+    private GameManager _gameManager;
 
+    public bool isBoss = false;
 
     private void Start()
     {
         _screenShakeManager = ScreenShakeManager.GetInstance();
         _scoreManager = ScoreManager.GetInstance();
+        _gameManager = GameManager.GetInstance();
     }
 
     private void TakeDamage(int Amount, PlayerBullet thePlayerBullet)
@@ -29,9 +32,16 @@ public class EnemyLife : MonoBehaviour
             SoundManager.GetInstance().playSound(SoundManager.soundToPlay.explosion);
             _screenShakeManager.Shake();
             _scoreManager.AddScore(scoreEarn);
-            if(thePlayerBullet.GetOwner())
-                thePlayerBullet.GetOwner().gameObject.GetComponent<PlayerShoot>().AddReloadSpecialBullet();
-            GetComponent<EnemyShoot>().Shoot();
+            if (!isBoss)
+            {
+                if (thePlayerBullet.GetOwner())
+                    thePlayerBullet.GetOwner().gameObject.GetComponent<PlayerShoot>().AddReloadSpecialBullet();
+                GetComponent<EnemyShoot>().Shoot();
+            }
+            else
+            {
+                _gameManager.Win();
+            }
             Destroy(gameObject);
         }
     }

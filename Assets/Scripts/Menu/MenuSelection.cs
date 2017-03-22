@@ -65,13 +65,13 @@ public class MenuSelection : MonoBehaviour
     {
         if (_currentSelected == selected.newGame)
         {
-            newGame.color = Color.red;
+            newGame.color = new Color(255.0f/255.0f, 176.0f/255.0f, 176.0f/255.0f);
             quit.color = Color.white;
         }
         else
         {
             newGame.color = Color.white;
-            quit.color = Color.red;
+            quit.color = new Color(255.0f / 255.0f, 176.0f / 255.0f, 176.0f / 255.0f);
         }
     }
 

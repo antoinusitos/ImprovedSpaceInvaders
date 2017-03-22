@@ -25,6 +25,9 @@ public class PlayerShoot : MonoBehaviour
     private bool _spawnOne = true;
     private bool _shootingSuperBullet = false;
 
+    public float minOffsetSpecial = -1.0f;
+    public float maxOffsetSpecial = 1.0f;
+
     public PlayerMovement playerMovement;
 
     private bool _mustStop = false;
@@ -115,14 +118,18 @@ public class PlayerShoot : MonoBehaviour
                 {
                     GameObject aBullet = Instantiate(specialBulletPrefab, superBulletSpawn.transform.position, superBulletSpawn.transform.localRotation);
                     aBullet.transform.rotation = Quaternion.Euler(0, playerMovement.GetAngle(), 0);
-                    Vector2 dir = new Vector2(-transform.position.x, -transform.position.z);
+                    float r = Random.Range(minOffsetSpecial, maxOffsetSpecial);
+                    float r2 = Random.Range(minOffsetSpecial, maxOffsetSpecial);
+                    Vector2 dir = new Vector2(-transform.position.x + r, -transform.position.z + r2);
                     aBullet.GetComponent<Bullet>().SetDirection(dir);
                 }
                 else
                 {
                     GameObject aBullet = Instantiate(specialBulletPrefab, superBulletSpawn2.transform.position, superBulletSpawn2.transform.localRotation);
                     aBullet.transform.rotation = Quaternion.Euler(0, playerMovement.GetAngle(), 0);
-                    Vector2 dir = new Vector2(-transform.position.x, -transform.position.z);
+                    float r = Random.Range(minOffsetSpecial, maxOffsetSpecial);
+                    float r2 = Random.Range(minOffsetSpecial, maxOffsetSpecial);
+                    Vector2 dir = new Vector2(-transform.position.x + r, -transform.position.z + r2);
                     aBullet.GetComponent<Bullet>().SetDirection(dir);
                 }
 
