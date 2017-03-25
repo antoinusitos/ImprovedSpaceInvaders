@@ -9,6 +9,9 @@ public class MenuSelection : MonoBehaviour
     public Image newGame;
     public Image quit;
 
+    public GameObject button1;
+    public GameObject button2;
+
     private bool playerIndexSet = false;
     private PlayerIndex playerIndex;
     private GamePadState state;
@@ -67,11 +70,15 @@ public class MenuSelection : MonoBehaviour
         {
             newGame.color = new Color(255.0f/255.0f, 176.0f/255.0f, 176.0f/255.0f);
             quit.color = Color.white;
+            button1.SetActive(true);
+            button2.SetActive(false);
         }
         else
         {
             newGame.color = Color.white;
             quit.color = new Color(255.0f / 255.0f, 176.0f / 255.0f, 176.0f / 255.0f);
+            button1.SetActive(false);
+            button2.SetActive(true);
         }
     }
 

@@ -34,7 +34,7 @@ public class FormationEnemy : MonoBehaviour
     private bool _mustStop = false;
 
     private int _formationSpeedLevel = 1;
-    public float bonusPerSpeedLevel = 1.25f;
+    public float bonusPerSpeedLevel = 0.6f;
 
     private UIManager _uiManager;
 
@@ -83,7 +83,7 @@ public class FormationEnemy : MonoBehaviour
         if (NewLevel > 1)
         {
             _formationSpeedLevel = NewLevel;
-            rotationSpeed *= bonusPerSpeedLevel;
+            rotationSpeed *= bonusPerSpeedLevel * NewLevel;
         }
     }
 
